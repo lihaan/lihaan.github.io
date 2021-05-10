@@ -177,8 +177,7 @@ body::-webkit-scrollbar {
 }
 
 .profile_pic {
-  width: 30%;
-  @include media_queries_rem(min-width, 12 15 12 15);
+  @include media_queries_rem(width, 12 15 12 15);
   @include media_queries_rem(margin-bottom, 1 1 0 0);
   @include media_queries_percent(margin-right, 0 2 2 2);
   height: 100%;
@@ -195,7 +194,7 @@ body::-webkit-scrollbar {
 }
 
 .profile_info {
-  width: 62%;
+  @include media_queries_rem(width, 24 30 24 30);
 
   .main {
     font-family: 'Quicksand';
@@ -272,7 +271,11 @@ body::-webkit-scrollbar {
 
   li {
     list-style-type: none;
-    margin-top: 1rem;
+    @include media_queries_rem(margin-bottom, 12 2 1 1);
+
+    &:first-of-type {
+      margin-top: 1rem;
+    }
   }
 }
 
@@ -280,41 +283,58 @@ body::-webkit-scrollbar {
 .featured_item {
   display: flex;
   flex-direction: row;
-  @include media_queries_rem(min-height, 0 0 16 16);
+  @include media_queries_rem(min-height, 16 16 16 16);
+  @include media_queries_rem(max-height, 16 25 20 18);
+  @include media_queries_raw(flex-wrap, wrap-reverse nowrap nowrap nowrap);
+  @include media_queries_raw(align-content, flex-end normal normal normal);
+  
   @include media_queries_rem(margin-left, 1 2 4 8);
   @include media_queries_rem(margin-right, 1 2 4 8);
 
   .info {
     flex: 7 2;
+    @include media_queries_rem(min-width, 22 22 22 22);
     background: #fff;
     padding: 1rem 1.5rem;
-    border-radius: 8px 0 0 8px;
+    @include media_queries_raw(border-top-left-radius, 0px 8px 8px 8px);
+    @include media_queries_raw(border-top-right-radius, 0 0 0 0);
+    @include media_queries_raw(border-bottom-right-radius, 8px 0 0 0);
+    @include media_queries_raw(border-bottom-left-radius, 8px 8px 8px 8px);
+    display: flex;
+    flex-direction: column;
 
     .title {
       font-family: 'WorkSans-Italic';
       font-weight: 700;
       font-size: 2.4rem;
       line-height: 120%;
+      flex: 1 1;
     }
 
     .description {
       margin-top: 1.2rem;
       line-height: 150%;
       color: #373737;
+      flex: 1 1;
     }
 
     .flex-row {
       margin-top: 2rem;
+      flex: 0 1;
     }
   }
   .graphic {
     flex: 12 1;
+    @include media_queries_rem(min-width, 15 0 0 0);
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     position: relative;
-    border-radius: 0 8px 8px 0;
+    @include media_queries_raw(border-top-left-radius, 8px 0 0 0);
+    @include media_queries_raw(border-top-right-radius, 8px 8px 8px 8px);
+    @include media_queries_raw(border-bottom-right-radius, 0 8px 8px 8px);
+    @include media_queries_raw(border-bottom-left-radius, 0 0 0 0);
     
     &::after {
       content: "";
