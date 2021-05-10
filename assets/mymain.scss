@@ -22,18 +22,60 @@
   src: url('/assets/Lato-Medium.ttf') format("truetype");
 }
 @font-face {
-  font-family: 'IBMPlexSans-SemiBold';
-  src: url('/assets/IBMPlexSans-SemiBold.ttf') format("truetype");
+  font-family: 'IBMPlexSans-Medium';
+  src: url('/assets/IBMPlexSans-Medium.ttf') format("truetype");
 }
 @font-face {
   font-family: 'WorkSans-Italic';
   src: url('/assets/WorkSans-Italic-VariableFont_wght.ttf') format("truetype");
 }
 
-// Set variables
+// Helper functions
+@function pow($base, $exponent) {
+  $result: 1;
+  @for $_ from 1 through $exponent {
+    $result: $result * $base;
+  }
+  @return $result;
+}
+
+
 
 // Side margins
-$x-margin-web: 2rem;
+$sizes: 0px, 576px, 992px, 1200px;
+$size_labels: "small", "medium", "large", "x-large";
+// s: 0-576px: phones
+// m: 576-992px: landscape phones, tablets/split-view desktops
+// l: 992px-1200px: landscape tablets/small desktops
+// xl: 1200px-?: large desktops
+@mixin media_queries_rem ($property, $values) {
+  @for $i from 1 through length($sizes) {
+    $size: nth($sizes, $i);
+    $value: nth($values, $i);
+    @media screen and (min-width: $size) {
+      #{$property}: $value * 16px;
+    }
+  }
+}
+@mixin media_queries_percent ($property, $values) {
+  @for $i from 1 through length($sizes) {
+    $size: nth($sizes, $i);
+    $value: nth($values, $i);
+    @media screen and (min-width: $size) {
+      #{$property}: $value * 1%;
+    }
+  }
+}
+@mixin media_queries_raw ($property, $values) {
+  @for $i from 1 through length($sizes) {
+    $size: nth($sizes, $i);
+    $value: nth($values, $i);
+    @media screen and (min-width: $size) {
+      #{$property}: $value
+    }
+  }
+}
+
 
 // Reset some basic elements
 body, h1, h2, h3, h4, h5, h6,
@@ -51,7 +93,7 @@ dl, dd, ol, ul, figure {
 // Default font properties
 html {
   font-family: 'Lato-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  font-size: 16px;
+  font-size: 100%;
   color: #111;
 }
 
@@ -83,17 +125,22 @@ body::-webkit-scrollbar {
 }
 
 .tab {
+  $tab-padding-x: 0.5rem;
   font-family: 'Oswald';
   font-size: 1.35rem;
   text-transform: uppercase;
-  min-width: 4rem;
-  padding: 0.5rem 1.5rem;
+  min-width: 8rem;
+  padding: $tab-padding-x 1.5rem;
   text-align: center;
-}
 
-.tab_main {
-  position: absolute;
-  left: $x-margin-web;
+  &.tab_main {
+    position: absolute;
+    padding: $tab-padding-x 0;
+    min-width: 0;
+    @include media_queries_rem(left, 0 1 1 2);
+    @include media_queries_rem(width, 3 3 6 8);
+    background: red;
+  }
 }
 
 
@@ -103,31 +150,37 @@ body::-webkit-scrollbar {
 
 
 .introduction {
-  $x-padding-introduction: 19%;
+  $padding-vals: 8 10 14 19;
+  @include media_queries_percent(padding-left, $padding-vals);
+  @include media_queries_percent(padding-right, $padding-vals);
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
-  height: 25rem;
-  padding: 3.5rem $x-padding-introduction 2rem $x-padding-introduction;
+  padding-top: 3.5rem;
+  padding-bottom: 2rem;
 
   &::after, &::before {
     content: "";
     position: absolute;
     background:#fff;
-    width: calc(#{$x-padding-introduction} - 2%);
+    @include media_queries_percent(width, 0 0 10 14);
     height: 1px;
   }
   &::before {
-    right: $x-margin-web;
+    right: 2rem;
   }
   &::after {
-    left: $x-margin-web;
+    left: 2rem;
   }
 }
 
 .profile_pic {
   width: 30%;
+  @include media_queries_rem(min-width, 12 15 12 15);
+  @include media_queries_rem(margin-bottom, 1 1 0 0);
+  @include media_queries_percent(margin-right, 0 2 2 2);
   height: 100%;
   display: flex;
   align-items: center;
@@ -142,17 +195,17 @@ body::-webkit-scrollbar {
 }
 
 .profile_info {
-  width: 60%;
+  width: 62%;
 
   .main {
     font-family: 'Quicksand';
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     line-height: 150%;
     color: #f1f1f1;
   }
   .details {
     font-family: 'Lato-Light';
-    font-size: 1rem;
+    font-size: 1.1rem;
     line-height: 165%;
     color: #e6e6e6;
     margin-top: 1rem;
@@ -162,7 +215,7 @@ body::-webkit-scrollbar {
     margin-top: 1.5rem;
     justify-content: space-between;
     .button {
-      width: 11rem;
+      width: 30%;
     }
   }
 }
@@ -170,15 +223,14 @@ body::-webkit-scrollbar {
 
 
 .button {
-  min-width: 6rem;
-  min-height: 2rem;
+  min-width: 3rem;
+  min-height: 3rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  font-family: 'IBMPlexSans-SemiBold';
+  font-family: 'IBMPlexSans-Medium';
   font-size: 0.9rem;
-  padding: 0.75rem 1.25rem;
   border-radius: 8px;
 
   &.linkedin {
@@ -186,9 +238,14 @@ body::-webkit-scrollbar {
     box-shadow: 0px 6px 16px 0 rgba($color: rgb(2, 7, 32), $alpha: 0.15);
     color: #fff;
   }
-  &.github, &.behance {
+  &.github {
     background: #fff;
     box-shadow: 0px 6px 16px 0 rgba($color: rgb(2, 7, 32), $alpha: 0.1);
+  }
+  &.behance {
+    background: #fff;
+    box-shadow: 0px 6px 16px 0 rgba($color: rgb(2, 7, 32), $alpha: 0.1);
+    color: #0A5AF8;
   }
 
   img {
@@ -196,17 +253,20 @@ body::-webkit-scrollbar {
   }
 
   .label {
-    margin: 0 0 0 0.5rem;
+    margin: 0 0 0 0.75rem;
+    @include media_queries_raw(display, none none inline inline);
   }
 }
 
 .featured {
   .page_title {
     font-family: 'Lato-Medium';
-    font-size: 2rem;
-    color: #e7e7e7;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
-    margin-left: $x-margin-web;
+    @include media_queries_rem(margin-left, 1 2 4 8);
+    @include media_queries_rem(margin-right, 1 2 4 8);
+    @include media_queries_raw(text-align, center center left left);
     letter-spacing: 0.4rem;
   }
 
@@ -220,33 +280,41 @@ body::-webkit-scrollbar {
 .featured_item {
   display: flex;
   flex-direction: row;
-  height: 16rem;
+  @include media_queries_rem(min-height, 0 0 16 16);
+  @include media_queries_rem(margin-left, 1 2 4 8);
+  @include media_queries_rem(margin-right, 1 2 4 8);
 
   .info {
-    width: 38%;
+    flex: 7 2;
     background: #fff;
-    padding: 1rem $x-margin-web;
+    padding: 1rem 1.5rem;
+    border-radius: 8px 0 0 8px;
 
     .title {
       font-family: 'WorkSans-Italic';
       font-weight: 700;
-      font-size: 2.5rem;
+      font-size: 2.4rem;
       line-height: 120%;
     }
 
     .description {
-      margin-top: 1rem;
+      margin-top: 1.2rem;
       line-height: 150%;
       color: #373737;
     }
+
+    .flex-row {
+      margin-top: 2rem;
+    }
   }
   .graphic {
-    width: 62%;
+    flex: 12 1;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     position: relative;
+    border-radius: 0 8px 8px 0;
     
     &::after {
       content: "";
@@ -257,22 +325,20 @@ body::-webkit-scrollbar {
     } 
 
     img {
+      height: 100%;
       width: 100%;
+      object-fit: cover;
     }
   }
 }
 
-.tags {
-  display: flex;
-  flex-direction: row;
-  margin-top: 2rem;
-}
+
 .tag {
   padding: 0.5rem 1rem;
   border-radius: 100px;
   margin-right: 1rem;
   font-family: 'Lato-Medium';
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 
   &.data_science {
     background: #FFDD64;
