@@ -45,28 +45,10 @@
 $sizes: 0px, 576px, 992px, 1200px;
 $size_labels: "small", "medium", "large", "x-large";
 // s: 0-576px: phones
-// m: 576-992px: landscape phones, tablets/split-view desktops
-// l: 992px-1200px: landscape tablets/small desktops
+// m: 576-992px: landscape phones, split-view desktops
+// l: 992px-1200px: tablets/small desktops
 // xl: 1200px-?: large desktops
-@mixin media_queries_rem ($property, $values) {
-  @for $i from 1 through length($sizes) {
-    $size: nth($sizes, $i);
-    $value: nth($values, $i);
-    @media screen and (min-width: $size) {
-      #{$property}: $value * 16px;
-    }
-  }
-}
-@mixin media_queries_percent ($property, $values) {
-  @for $i from 1 through length($sizes) {
-    $size: nth($sizes, $i);
-    $value: nth($values, $i);
-    @media screen and (min-width: $size) {
-      #{$property}: $value * 1%;
-    }
-  }
-}
-@mixin media_queries_raw ($property, $values) {
+@mixin media_queries ($property, $values) {
   @for $i from 1 through length($sizes) {
     $size: nth($sizes, $i);
     $value: nth($values, $i);
@@ -108,6 +90,11 @@ html {
   flex-direction: row;
   align-items: center;
 }
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 // Custom scrollbar
 body::-webkit-scrollbar {
@@ -118,28 +105,32 @@ body::-webkit-scrollbar {
   position: relative;
   display: flex;
   flex-direction: row;
-  width: 100%;
-  justify-content: space-evenly;
+  justify-content: center;
   background-color: #fff;
   box-shadow: 0px 6px 12px 0 rgba($color: rgb(2, 7, 32), $alpha: 0.15);
+
+  >.flex-row {
+    @include media_queries(width, 100% 700px 900px 900px);
+    justify-content: space-evenly;
+  }
 }
 
 .tab {
-  $tab-padding-x: 0.5rem;
+  $tab-padding-y: 0.5rem;
   font-family: 'Oswald';
   font-size: 1.35rem;
   text-transform: uppercase;
-  min-width: 8rem;
-  padding: $tab-padding-x 1.5rem;
+  @include media_queries(width, 0 8rem 9rem 10rem);
+  padding: $tab-padding-y 1.5rem;
   text-align: center;
 
   &.tab_main {
     position: absolute;
-    padding: $tab-padding-x 0;
+    padding: $tab-padding-y 0;
     min-width: 0;
-    @include media_queries_rem(left, 0 1 1 2);
-    @include media_queries_rem(width, 3 3 6 8);
-    background: red;
+    @include media_queries(left, 0 16px 16px 32px); // TODO: convert to hamburger menu when small
+    @include media_queries(width, 3rem 3rem 6rem 8rem);
+    background: red; // TODO: replace with a lihaan when large enough
   }
 }
 
@@ -150,73 +141,81 @@ body::-webkit-scrollbar {
 
 
 .introduction {
-  $padding-vals: 8 10 14 19;
-  @include media_queries_percent(padding-left, $padding-vals);
-  @include media_queries_percent(padding-right, $padding-vals);
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   padding-top: 3.5rem;
-  padding-bottom: 2rem;
 
+  $intro-flex-row-width: 100%, 80%, 775px, 850px;
+  >.flex-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    @include media_queries(width, $intro-flex-row-width);
+  }
+
+  $line-spacing: 2em;
+  &::before {
+    right: $line-spacing;
+  }
+  &::after {
+    left: $line-spacing;
+  }
   &::after, &::before {
     content: "";
     position: absolute;
     background:#fff;
-    @include media_queries_percent(width, 0 0 10 14);
+    @include media_queries(width, 0 0 calc((100% - #{nth($intro-flex-row-width, 3)}) / 2 - 2 * #{$line-spacing}) calc((100% - #{nth($intro-flex-row-width, 4)}) / 2 - 2 * #{$line-spacing}));
     height: 1px;
   }
-  &::before {
-    right: 2rem;
-  }
-  &::after {
-    left: 2rem;
-  }
-}
 
-.profile_pic {
-  @include media_queries_rem(width, 12 15 12 15);
-  @include media_queries_rem(margin-bottom, 1 1 0 0);
-  @include media_queries_percent(margin-right, 0 2 2 2);
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    max-height: 100%;
-    max-width: 100%;
-    border-radius: 1000px;
-    object-fit: contain;
-  }
-}
-
-.profile_info {
-  @include media_queries_rem(width, 24 30 24 30);
-
-  .main {
-    font-family: 'Quicksand';
-    font-size: 1.5rem;
-    line-height: 150%;
-    color: #f1f1f1;
-  }
-  .details {
-    font-family: 'Lato-Light';
-    font-size: 1.1rem;
-    line-height: 165%;
-    color: #e6e6e6;
-    margin-top: 1rem;
-  }
-
-  .flex-row {
-    margin-top: 1.5rem;
-    justify-content: space-between;
-    .button {
-      width: 30%;
+  $pic-ratio: 45%, 30%, 30%, 30%;
+  $margin-right-ratio: 0 8% 8% 8%;
+  // nth($pic-ratio, 1) and nth($info-ratio, 1) must >100% to force a flex-wrap
+  $info-ratio: 75%, 100% - nth($pic-ratio, 2) - nth($margin-right-ratio, 2), 100% - nth($pic-ratio, 3) - nth($margin-right-ratio, 3), 100% - nth($pic-ratio, 4) - nth($margin-right-ratio, 4);
+  .profile_pic {
+    @include media_queries(width, $pic-ratio);
+    @include media_queries(margin-bottom, 1rem 0 0 0);
+    @include media_queries(margin-right, $margin-right-ratio);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+  
+    img {
+      max-height: 100%;
+      max-width: 100%;
+      border-radius: 1000px;
+      object-fit: contain;
     }
   }
+  
+  .profile_info {
+    @include media_queries(width, $info-ratio);
+  
+    .main {
+      font-family: 'Quicksand';
+      font-size: 1.55rem;
+      line-height: 150%;
+      color: #f1f1f1;
+    }
+    .details {
+      font-family: 'Lato-Light';
+      font-size: 1.1rem;
+      line-height: 165%;
+      color: #e6e6e6;
+      margin-top: 1rem;
+    }
+  
+    >.flex-row {
+      margin-top: 1.5rem;
+      justify-content: space-between;
+      .button {
+        width: 30%;
+      }
+    }
+  }
+
 }
 
 
@@ -253,25 +252,33 @@ body::-webkit-scrollbar {
 
   .label {
     margin: 0 0 0 0.75rem;
-    @include media_queries_raw(display, none none inline inline);
+    @include media_queries(display, none none inline inline);
   }
 }
 
 .featured {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 2.5rem;
+
+  >.flex-col {
+    @include media_queries(width, 87.5% 87.5% 85% 80%);
+    max-width: 1200px;
+  }
+
   .page_title {
     font-family: 'Lato-Medium';
     font-size: 1.5rem;
     color: rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
-    @include media_queries_rem(margin-left, 1 2 4 8);
-    @include media_queries_rem(margin-right, 1 2 4 8);
-    @include media_queries_raw(text-align, center center left left);
+    @include media_queries(text-align, center left left left);
     letter-spacing: 0.4rem;
   }
 
   li {
     list-style-type: none;
-    @include media_queries_rem(margin-bottom, 12 2 1 1);
+    @include media_queries(margin-bottom, 3rem 3rem 2rem 1rem);
 
     &:first-of-type {
       margin-top: 1rem;
@@ -283,58 +290,53 @@ body::-webkit-scrollbar {
 .featured_item {
   display: flex;
   flex-direction: row;
-  @include media_queries_rem(min-height, 16 16 16 16);
-  @include media_queries_rem(max-height, 16 25 20 18);
-  @include media_queries_raw(flex-wrap, wrap-reverse nowrap nowrap nowrap);
-  @include media_queries_raw(align-content, flex-end normal normal normal);
-  
-  @include media_queries_rem(margin-left, 1 2 4 8);
-  @include media_queries_rem(margin-right, 1 2 4 8);
+  @include media_queries(flex-wrap, wrap-reverse nowrap nowrap nowrap);
+  @include media_queries(align-content, flex-end normal normal normal);
 
   .info {
-    flex: 7 2;
-    @include media_queries_rem(min-width, 22 22 22 22);
+    @include media_queries(width, 100% 60% 45% 38%);
     background: #fff;
     padding: 1rem 1.5rem;
-    @include media_queries_raw(border-top-left-radius, 0px 8px 8px 8px);
-    @include media_queries_raw(border-top-right-radius, 0 0 0 0);
-    @include media_queries_raw(border-bottom-right-radius, 8px 0 0 0);
-    @include media_queries_raw(border-bottom-left-radius, 8px 8px 8px 8px);
-    display: flex;
+    @include media_queries(border-top-left-radius, 0px 8px 8px 8px);
+    @include media_queries(border-top-right-radius, 0 0 0 0);
+    @include media_queries(border-bottom-right-radius, 8px 0 0 0);
+    @include media_queries(border-bottom-left-radius, 8px 8px 8px 8px);
+    /* display: flex;
     flex-direction: column;
+    max-height: 20rem;
+    @include media_queries(min-height, 45vw 40vw 30vw 15vw); hard to ge the right values to make all list items the same height, still tolerable ui issue */
 
     .title {
       font-family: 'WorkSans-Italic';
       font-weight: 700;
       font-size: 2.4rem;
       line-height: 120%;
-      flex: 1 1;
+      // flex: 1 1;
     }
 
     .description {
       margin-top: 1.2rem;
       line-height: 150%;
       color: #373737;
-      flex: 1 1;
+      // flex: 1 1;
     }
 
-    .flex-row {
+    >.flex-row {
       margin-top: 2rem;
-      flex: 0 1;
+      // flex: 0 1;
     }
   }
   .graphic {
-    flex: 12 1;
-    @include media_queries_rem(min-width, 15 0 0 0);
+    @include media_queries(width, 100% 40% 55% 62%);
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     position: relative;
-    @include media_queries_raw(border-top-left-radius, 8px 0 0 0);
-    @include media_queries_raw(border-top-right-radius, 8px 8px 8px 8px);
-    @include media_queries_raw(border-bottom-right-radius, 0 8px 8px 8px);
-    @include media_queries_raw(border-bottom-left-radius, 0 0 0 0);
+    @include media_queries(border-top-left-radius, 8px 0 0 0);
+    @include media_queries(border-top-right-radius, 8px 8px 8px 8px);
+    @include media_queries(border-bottom-right-radius, 0 8px 8px 8px);
+    @include media_queries(border-bottom-left-radius, 0 0 0 0);
     
     &::after {
       content: "";
