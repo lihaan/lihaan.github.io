@@ -21,10 +21,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse accumsan ma
 
 > Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse accumsan mauris lectus, eget ornare lectus bibendum id. Suspendisse aliquet massa vitae luctus maximus. Nam vel ipsum ac mauris commodo porta id sed ligula.
 
-Vestibulum sodales augue scelerisque quam euismod accumsan vel vel tellus. Sed eu quam lobortis, ultrices magna ultrices, tempus elit. Donec auctor id eros id dapibus. Sed facilisis dignissim sodales. Fusce vel elit massa. Etiam pharetra tellus arcu. Cras vestibulum fringilla lectus vitae mattis.
+{% include image.html src="/assets/Group2.png" caption="Screenshot from NUS Confessions page" alt="Screenshot of NUS Confessions page showing a series of user-submitted confessions" %}
 
-![Drag Racing](/assets/Group2.png){:class="float-left"}
-Screengrab from NUS Confessions
+Vestibulum sodales augue scelerisque quam euismod accumsan vel vel tellus. Sed eu quam lobortis, ultrices magna ultrices, tempus elit. Donec auctor id eros id dapibus. Sed facilisis dignissim sodales. Fusce vel elit massa. Etiam pharetra tellus arcu. Cras vestibulum fringilla lectus vitae mattis.
 
 ```
 # for each empty tile, find out which 4 directions are available to move

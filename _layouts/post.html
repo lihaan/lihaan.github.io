@@ -36,9 +36,24 @@ layout: mydefault
     <div class="flex-col">
       {{ content }}
     </div>
+    <div class="side-btn next_post">
+      <a href="" rel="">
+        {% include left_arrow.svg mystyle='transform: rotate3d(0, 0, 1, 180deg);' %}
+      </a>
+      <div class="post_title">How I study for 8 hours a day</div>
+    </div>
+    <div class="side-btn prev_post">
+      <a href="" rel="">
+        {% include left_arrow.svg %}
+      </a>
+      <div class="post_title">Interesting CSS tricks</div>
+    </div>
   </div>
 
   <div class="post_footer">
+    <a class="back_to_top" href="" rel="">
+      Back to top
+    </a>
     <div class="flex-row">
       <div class="mini_profile">
         <div class="flex-col">

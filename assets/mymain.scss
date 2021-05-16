@@ -88,6 +88,7 @@ dl, dd, ol, ul, figure {
   padding: 0;
 }
 a {
+  display: block;
   color: $off-black;
   text-decoration: none; /* no underline */
 }
@@ -148,6 +149,7 @@ html {
   }
 }
 
+$min-main-tab-width: 4rem;
 .header {
   position: relative;
   display: flex;
@@ -157,7 +159,8 @@ html {
   box-shadow: 0px 6px 16px 0px rgba($not-rlly-black, 0.06);
 
   >.flex-row {
-    @include media_queries(width, 100% 700px 900px 900px);
+    margin: 0 $min-main-tab-width;
+    @include media_queries(width, 0 700px 900px 900px);
     justify-content: space-evenly;
   }
 }
@@ -169,16 +172,38 @@ html {
   letter-spacing: 2px;
   text-transform: uppercase;
   @include media_queries(width, 0 8rem 9rem 10rem);
+  @include media_queries(display, none block block block);
   padding: $tab-padding-y 1.5rem;
   text-align: center;
+  position: relative;
 
   &.tab_main {
     position: absolute;
     padding: $tab-padding-y 0;
-    min-width: 0;
-    @include media_queries(left, 0 16px 16px 32px); // TODO: convert to hamburger menu when small
-    @include media_queries(width, 3rem 3rem 6rem 8rem);
-    background: red; // TODO: replace with a lihaan when large enough
+    left: 0;
+    @include media_queries(width, 0 $min-main-tab-width 8rem 10rem);
+    // background: red; // TODO: replace with a lihaan when large enough
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 49%;
+    bottom: 0.5rem;
+    width: 2%;
+    height: 2px;
+    background: $theme-blue;
+    opacity: 0;
+    transition: transform 0.2s ease-out;
+  }
+
+  &:hover::before {
+    opacity: 1;
+    transform: scale3d(40, 1, 1);
+  }
+
+  &:hover {
+    font-weight: 500;
   }
 }
 
@@ -212,7 +237,7 @@ html {
   &::after, &::before {
     content: "";
     position: absolute;
-    background:#fff;
+    background: $white-af;
     @include media_queries(width, 0 0 calc((100% - #{nth($intro-flex-row-width, 3)}) / 2 - 2 * #{$line-spacing}) calc((100% - #{nth($intro-flex-row-width, 4)}) / 2 - 2 * #{$line-spacing}));
     height: 1px;
   }
@@ -243,13 +268,13 @@ html {
   
     .main {
       font-family: 'Quicksand';
-      font-size: 1.55rem;
+      font-size: 1.5rem;
       line-height: 150%;
       color: $off-white;
     }
     .details {
       font-family: 'Lato-Light';
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       line-height: 165%;
       color: $not-rlly-white;
       margin-top: 1rem;
@@ -267,7 +292,7 @@ html {
 }
 
 
-
+$button-shadow-size: 2px 6px 16px 0;
 .button {
   min-width: 3rem;
   min-height: 3rem;
@@ -278,31 +303,55 @@ html {
   font-family: 'IBMPlexSans-Medium';
   font-size: 0.9rem;
   border-radius: 8px;
+  box-shadow: $button-shadow-size rgba($not-rlly-black, 0.15);
+  position: relative;
+  overflow: hidden;
 
-  $button-shadow-size: 2px 6px 16px 0;
   &.linkedin {
     background: #2467C2;
-    box-shadow: $button-shadow-size rgba($not-rlly-black, 0.15);
     color: $white-af;
   }
   &.github {
     background: $white-af;
-    box-shadow: $button-shadow-size rgba($not-rlly-black, 0.15);
     color: $black-af;
   }
   &.behance {
     background: $white-af;
-    box-shadow: $button-shadow-size rgba($not-rlly-black, 0.15);
     color: #4176f9;
   }
 
   img {
+    position: relative; // needed to make it appear in front of animation
     width: 1.5rem
   }
 
   .label {
+    position: relative; // needed to make it appear in front of animation
     margin: 0 0 0 0.75rem;
     @include media_queries(display, none none inline inline);
+  }
+
+  &::before {
+    position: absolute;
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: $not-rlly-black;
+    opacity: 0;
+    border-radius: 50%;
+  }
+
+  &:hover::before {
+    transform: scale3d(70, 70, 1);
+    opacity: 1;
+    background: rgba($white-af, 0);
+    transition: opacity 0.3s ease-out, background-color 0.3s ease-out, transform 0.2s ease-out;
+  }
+
+  transition: transform 0.4s ease-out;
+  &:hover {
+    transform: translate3d(0, -0.2rem, 0);
+    box-shadow: 3px 9px 24px 0 rgba($off-black, 0.3);
   }
 }
 
@@ -324,6 +373,7 @@ html {
     text-transform: uppercase;
     @include media_queries(text-align, center left left left);
     letter-spacing: 0.4rem;
+    line-height: 140%;
   }
 
   li {
@@ -345,7 +395,7 @@ html {
 
   .info {
     @include media_queries(width, 100% 60% 45% 38%);
-    background: #fff;
+    background: $off-white;
     padding: 1rem 1.5rem;
     @include media_queries(border-top-left-radius, 0px 8px 8px 8px);
     @include media_queries(border-top-right-radius, 0 0 0 0);
@@ -355,6 +405,7 @@ html {
     flex-direction: column;
     max-height: 20rem;
     @include media_queries(min-height, 45vw 40vw 30vw 15vw); hard to ge the right values to make all list items the same height, still tolerable ui issue */
+    transition: background-color 0.2s ease-out;
 
     .title {
       font-family: 'WorkSans-Italic';
@@ -363,13 +414,17 @@ html {
       line-height: 120%;
       letter-spacing: -0.5px;
       // flex: 1 1;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .description {
       margin-top: 1.2rem;
       line-height: 150%;
       color: $not-rlly-black;
-      font-size: 1rem;
+      font-size: 1.05rem;
       // flex: 1 1;
     }
 
@@ -405,6 +460,14 @@ html {
       object-fit: cover;
     }
   }
+
+  &:hover {
+    .info {
+      background: $white-af;
+    }
+  }
+
+
 }
 
 
@@ -414,8 +477,9 @@ html {
   margin-right: 1rem;
   font-family: 'Quicksand';
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: $off-black;
+  text-align: center;
 
   &.data_science {
     background: #FFDD64;
@@ -436,7 +500,7 @@ html {
 }
 
 
-$comfortable-reading-width: 70% 70% 700px 700px;
+$comfortable-reading-width: 85% 70% 650px 700px;
 
 .post_header {
   padding-top: 2rem;
@@ -456,7 +520,7 @@ $comfortable-reading-width: 70% 70% 700px 700px;
       font-size: 1rem;
       font-weight: 700;
       letter-spacing: 1px;
-      color: $black-af;
+      color: $not-rlly-black;
       text-transform: uppercase;
     }
   
@@ -464,16 +528,17 @@ $comfortable-reading-width: 70% 70% 700px 700px;
       margin-top: 2rem;
       font-family: 'WorkSans-Italic';
       font-weight: 700;
-      font-size: 2.4rem;
+      font-size: 2.5rem;
       line-height: 140%;
       letter-spacing: -0.5px;
+      color: $black-af
     }
   
     .description {
       font-family: 'Lato-Light';
       font-size: 1.5rem;
       line-height: 150%;
-      color: $off-black;
+      color: $black-af;
       margin-top: 1rem;
       padding: 0.1rem 0 0.2rem 1.5rem;
       position: relative;
@@ -500,23 +565,47 @@ $comfortable-reading-width: 70% 70% 700px 700px;
 }
 
 .post_content {
-  margin-top: 3rem;
+  margin-top: 5rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
+  position: relative;
 
   >.flex-col {
     @include media_queries(width, $comfortable-reading-width);
 
-    >* {
-      margin-bottom: 1.5rem;
+    $inter-para-spacing: 1.75rem;
+    $inter-content-spacing: 3rem;
+    >p + p {
+      margin-top: $inter-para-spacing;
+    }
+    >p + :not(p),
+    >:not(p) + p,
+    >:not(p) + :not(p)  {
+      margin-top: $inter-content-spacing;
     }
   
     >p {
-      font-size: 1rem;
-      line-height: 170%;
+      font-size: 1.2rem;
+      line-height: 175%;
+      color: $off-black;
+    }
+
+    .post-image {
+      display: inline-block;
+
       >img {
         width: 100%;
+        @include media_queries(min-height, 30vh 30vh 0 0);
+        object-fit: cover;
+      }
+
+      >p {
+        font-size: 1.1rem;
+        color: rgba($black-af, 0.5);
+        margin-top: 0.5rem;
+        text-align: center;
+        line-height: 120%;
       }
     }
 
@@ -525,7 +614,7 @@ $comfortable-reading-width: 70% 70% 700px 700px;
       font-size: 1.4rem;
       line-height: 170%;
       background: $theme-pale-blue;
-      color: $not-rlly-black;
+      color: rgba($black-af, 0.8);
       padding: 1.2rem 1.2rem;
       letter-spacing: 0.5px;
       border-radius: 4px;
@@ -533,35 +622,113 @@ $comfortable-reading-width: 70% 70% 700px 700px;
 
     .language-plaintext {
       font-family: 'UbuntuMono-Regular';
-      font-size: 1rem;
+      font-size: 1.05rem;
       line-height: 170%;
       background: $not-rlly-white;
       color: $not-rlly-black;
       padding: 1.2rem 1.2rem;
       letter-spacing: 0.5px;
       border-radius: 4px;
-      color: $black-af;
+      color: rgba($black-af, 0.8);
 
       code {
         white-space: break-spaces;
       }
     }
   }
+
+  .side-btn {
+    position: absolute;
+    @include media_queries(width, 0 0 4rem 5rem);
+    @include media_queries(height, 0 0 4rem 5rem);
+    background: $theme-pale-blue;
+    border-radius: 50%;
+
+    a {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 20%;
+        fill: $white-af
+      }
+    }
+
+    .post_title {
+      @include media_queries(display, none none block block);
+      margin-top: 1rem;
+      @include media_queries(width, 0 0 6rem 8rem);
+      font-family: 'Quicksand';
+      font-weight: 700;
+      font-size: 1.1rem;
+      line-height: 140%;
+      color: $theme-blue;
+      opacity: 0;
+    }
+
+    &:hover {
+
+      .post_title {
+        transition: opacity 0.5s ease-out;
+        opacity: 1;
+      }
+
+      svg {
+        transition: fill 0.5s ease-out;
+        fill: $theme-blue;
+      }
+    }
+
+    $side-btn-spacing: 0 0 3rem 4rem;
+    &.next_post{
+      @include media_queries(left, 0 0 calc(50vw + #{nth($comfortable-reading-width, 3)} / 2 + #{nth($side-btn-spacing, 3)}) calc(50vw + #{nth($comfortable-reading-width, 4)} / 2 + #{nth($side-btn-spacing, 4)}));
+      text-align: left;
+      .post_title {
+        position: absolute;
+        left: 0;
+      }
+    }
+    &.prev_post{
+      @include media_queries(right, 0 0 calc(50vw + #{nth($comfortable-reading-width, 3)} / 2 + #{nth($side-btn-spacing, 3)}) calc(50vw + #{nth($comfortable-reading-width, 4)} / 2 + #{nth($side-btn-spacing, 4)}));
+      text-align: right;
+      .post_title {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+
 }
 
 .post_footer {
-  margin-top: 3rem;
+  margin-top: 5rem;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  >.back_to_top {
+    color: $theme-blue;
+    font-size: 1rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 
   $mini-profile-padding-x: 2rem;
-  $mini-profile-width: 4em;
+  $mini-profile-width: 6rem 4rem 4rem 4rem;
   >.flex-row {
+    margin-top: 1rem;
     @include media_queries(width, $comfortable-reading-width);
+    justify-content: center;
     background: $theme-pale-blue;
     padding: 1.5rem $mini-profile-padding-x;
     border-radius: 4px;
+    @include media_queries(flex-wrap, wrap nowrap nowrap nowrap);
 
     .mini_profile {
       display: flex;
@@ -570,9 +737,10 @@ $comfortable-reading-width: 70% 70% 700px 700px;
 
       >.flex-col{
         align-items: center;
+        @include media_queries(flex-direction, row column column column);
 
         >.profile_pic {
-          width: $mini-profile-width;
+          @include media_queries(width, $mini-profile-width);
           img {
             width: 100%;
           }
@@ -582,41 +750,52 @@ $comfortable-reading-width: 70% 70% 700px 700px;
           margin-top: 0.25rem;
           text-align: center;
           font-family: 'Quicksand';
-          font-size: 1.3rem;
+          @include media_queries(font-size, 1.5rem 1.4rem 1.4rem 1.4rem);
           font-weight: 500;
-          color: $off-black;
+          color: $not-rlly-black;
+          white-space: nowrap;
+          @include media_queries(margin-left, 1rem 0 0 0 0);
         }
       }
     }
 
     .separator {
       width: 1px;
-      height: 100%;
+      align-self: stretch;
       background: rgba($black-af, 0.2);
       margin: 0 $mini-profile-padding-x;
+      @include media_queries(display, none block block block);
     }
 
     .related_articles {
-      width: calc(100% - $mini-profile-width);
+      @include media_queries(width, 100% calc(100% - #{nth($mini-profile-width,2)}) calc(100% - #{nth($mini-profile-width,3)}) calc(100% - #{nth($mini-profile-width,4)}));
+      @include media_queries(margin-top, 1rem 0 0 0);
 
       .title {
         font-family: 'Quicksand';
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: 700;
         color: $off-black;
       }
 
       ul {
         list-style-image: url('/assets/arrow_bullet.svg');
-        list-style-position: inside;
+        padding-left: 22px; // magic number based on size of arrow_bullet.svg
+        list-style-position: outside;
 
         li {
           margin-top: 0.5rem;
           a {
             font-family: 'Quicksand';
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 500;
             color: $theme-blue;
+            line-height: 150%;
+
+            &:hover {
+              text-decoration: underline;
+              font-weight: 700;;
+            }
           }
         }
       }
