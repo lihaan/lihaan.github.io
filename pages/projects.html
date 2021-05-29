@@ -1,0 +1,39 @@
+---
+layout: list_posts
+permalink: projects
+title: projects
+item: project
+
+headline: All the stuff that I worked on.
+lead: Coursework, concept designs, crazy explorations <br> and anything else powered by caffeine
+---
+
+<div class="projects">
+  <div class="flex-col">
+    {%- include content_header.html -%}
+    <ul>
+      {%- for post in site.posts -%}
+      {%- if post.post-type == "project" -%}
+      <li class="list_item_project">
+        <div class="image_content">
+          <img src={{ post.cover }} />
+          <a class="title" href="{{post.url}}" rel="">{{ post.title }}</a>
+        </div>
+        <div class="text_content">
+          <div class="description">{{ post.description }}</div>
+          {%- if post.tags.size > 0 -%}
+          <div class="flex-col">
+            <div class="flex-row">
+              {%- for tag in post.tags -%}
+              <div class="{{tag | downcase | replace: " ", "_" }} tag p-category">{{ tag }}</div>
+              {%- endfor -%}
+            </div>
+          </div>
+          {%- endif -%}
+        </div>
+      </li>
+      {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>

@@ -1,8 +1,13 @@
 ---
 layout: post
 title:  "Welcome to Jekyll!"
+permalink: blog/welcome_to_jekyll
 date:   2020-12-04 13:59:10 +0800
 categories: jekyll update
+post-type: article
+
+cover: "/assets/profile_pic_full.jpg"
+tags: ["Data Science"]
 ---
 You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 

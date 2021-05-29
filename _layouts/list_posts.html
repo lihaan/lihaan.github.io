@@ -1,0 +1,27 @@
+---
+layout: mydefault
+---
+
+<div class="list_posts {{ page.title }}_page">
+
+  <div class="list_posts_header">
+    <div class="flex-col">
+      <div class="title">{{ page.headline }}</div>
+      <div class="description">{{ page.lead }}</div>
+      <!-- TODO: When there are more posts and things to actually filter by -->
+      <!-- <div class="searchbox"><input type="text" placeholder="Search for a {{page.item}}"/></div>
+      <div class="tags_header">Or use the following tags:</div>
+      <div class="flex-row">
+        {% for tag in site.tags %}
+        <div class="{{ tag | first | downcase | replace: " ", "_" }} tag deselected">{{ tag | first }}</div>
+        {% endfor %}
+      </div> -->
+    </div>
+  </div>
+
+  <div class="list_posts_content">
+    {{ content }}
+  </div>
+
+
+</div>

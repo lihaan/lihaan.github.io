@@ -6,26 +6,25 @@ layout: mydefault
   <header class="post_header">
     <div class="flex-col">
       <div class="info">
-        <div class="type">Project</div>
+        <div class="type">{{ page.post-type }}</div>
         <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
           {{ page.date | date: "%-d %b %Y" }}
         </time>
       </div>
       <div class="title p-name" itemprop="name headline">{{ page.title | escape }}</div>
       <div class="description p-summary" itemprop="abstract">{{ page.description}}</div>
-      {%- if page.categories -%}
+      {%- if page.tags.size > 0 -%}
       <div class="flex-row">
-        {% assign metadata = "" %}
-        {% for category in page.categories %}
-        {% capture keyword_metadata %}
-        {% if category != page.categories.last %}
-        {{ keyword_metadata | append: category | append: ", " }}
-        {% else %}
-        {{ keyword_metadata | append: category }}
-        {% endif %}
-        {% endcapture %}
-        <div class="{{category | downcase | replace: " ", "_" }} tag p-category" itemprop="">{{ category }}</div>
-        {% endfor %}
+        {%- assign keyword_metadata = "" -%}
+        {%- for tag in page.tags -%}
+          {%- capture keyword_metadata -%}
+            {{ keyword_metadata | append: tag }}
+              {%- unless forloop.last -%}
+                {{ keyword_metadata | append: ", " }}
+              {%- endunless -%}
+          {%- endcapture -%}
+          <div class="{{tag | downcase | replace: " ", "_" }} tag p-category">{{ tag }}</div>
+        {%- endfor -%}
         <meta itemprop="keywords" content="{{keyword_metadata}}" />
       </div>
       {%- endif -%}
@@ -36,43 +35,44 @@ layout: mydefault
     <div class="flex-col">
       {{ content }}
     </div>
-    <div class="side-btn next_post">
+    <div class="side_btn next_post">
       <a href="" rel="">
         {% include left_arrow.svg mystyle='transform: rotate3d(0, 0, 1, 180deg);' %}
       </a>
-      <div class="post_title">How I study for 8 hours a day</div>
+      <div class="flex-col">
+        <div class="post_title_header">Read Next:</div>
+        <div class="post_title">How I study for 8 hours a day</div>
+      </div>
     </div>
-    <div class="side-btn prev_post">
+    <div class="side_btn prev_post">
       <a href="" rel="">
         {% include left_arrow.svg %}
       </a>
-      <div class="post_title">Interesting CSS tricks</div>
+      <div class="flex-col">
+        <div class="post_title_header">Read Previous:</div>
+        <div class="post_title">Interesting CSS tricks</div>
+      </div>
     </div>
   </div>
 
   <div class="post_footer">
-    <a class="back_to_top" href="" rel="">
-      Back to top
-    </a>
+    {% include back_to_top.html %}
     <div class="flex-row">
-      <div class="mini_profile">
+      <a class="mini_profile" href="/" rel="author">
         <div class="flex-col">
           <div class="profile_pic"><img class="u-photo" src="/assets/profile_pic.svg" itemprop="image" /></div>
           <span class="name" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            <span class="p-author h-card" itemprop="name">{{ page.author }}</span>
+            <span class="p-author h-card" itemprop="name">{{ site.author }}</span>
           </span>
         </div>
-      </div>
+      </a>
       <div class="separator"></div>
-      <div class="related_articles">
-        <div class="title">Related Articles</div>
+      <div class="related_posts">
+        <div class="title">Read More:</div>
         <ul>
-          <li><a class="u-url" rel="" href="{{ page.rel-article-1.url | relative_url }}">{{ page.rel-article-1.title
-              }}</a></li>
-          <li><a class="u-url" rel="" href="{{ page.rel-article-2.url | relative_url }}">{{ page.rel-article-2.title
-              }}</a></li>
-          <li><a class="u-url" rel="" href="{{ page.rel-article-3.url | relative_url }}">{{ page.rel-article-3.title
-              }}</a></li>
+          {% for article in page.rel-articles %}
+          <li><a class="u-url" href="{{ article.url | relative_url }}">{{ article.title }}</a></li>
+          {% endfor %}
         </ul>
       </div>
     </div>

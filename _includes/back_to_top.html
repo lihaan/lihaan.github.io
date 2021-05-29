@@ -1,0 +1,11 @@
+<a class="back_to_top" href="">
+  Back to top
+</a>
+<script type="text/javascript">
+  console.log(document.getElementsByClassName("back_to_top")[0]);
+  document.getElementsByClassName("back_to_top")[0].addEventListener("click", scrollToTop);
+  function scrollToTop(event) {
+    event.preventDefault();
+    window.scrollTo(0,0);
+  };
+</script>

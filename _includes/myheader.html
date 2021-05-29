@@ -1,8 +1,18 @@
 <div class="header">
   <div class="flex-row">
-    <a class="tab_main tab" href="" rel="">Home</a>
-    <a class="about tab" href="" rel="">About</a>
-    <a class="projects tab" href="" rel="">Projects</a>
-    <a class="blog tab" href="" rel="">Blog</a>
+    <a class="tab_main tab" href="/" rel="">Home</a>
+    <a class="about tab {% if page.url == "/about" %}active{% endif %}" href="/about" rel="">About</a>
+    <a class="projects tab {% if page.url == "/projects" %}active{% endif %}" href="/projects" rel="">Projects</a>
+    <a class="blog tab {% if page.url == "/blog" %}active{% endif %}" href="/blog" rel="">Blog</a>
   </div>
 </div>
+<script type="text/javascript">
+  // TODO: get url of current page and mark the relevant tab as active
+  console.log(document.getElementsByClassName("header")[0]);
+  // document.getElementsByClassName("back_to_top")[0].addEventListener("click", scrollToTop);
+  // function scrollToTop(event) {
+  //   event.preventDefault();
+  //   window.scrollTo(0,0);
+  // };
+</script>
+
